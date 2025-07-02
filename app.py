@@ -1,27 +1,29 @@
 import streamlit as st
+import torch
 from transformers import pipeline
 
-# Load the model once using session state
+# Dynamically assign device
+device = 0 if torch.cuda.is_available() else -1
+
+# Load model once using cache
 @st.cache_resource
 def load_model():
     return pipeline(
         "text-generation",
         model="EleutherAI/gpt-neo-1.3B",
-        device=-1,  # Set to 0 if you have a GPU locally
+        device=device,
     )
 
 model = load_model()
 
-# Title and subtitle
+# Streamlit UI
 st.title("🤖 DAA & OS GPT - Free Tutor")
 st.subheader("Ask anything about Design and Analysis of Algorithms or Operating Systems.")
 
-# Input box
 user_input = st.text_area("💬 Ask a question:", height=100)
 
-# Answer generation
 if st.button("Get Answer"):
-    if user_input.strip() == "":
+    if not user_input.strip():
         st.warning("Please enter a question.")
     else:
         prompt = (
@@ -31,17 +33,18 @@ if st.button("Get Answer"):
         with st.spinner("Thinking..."):
             response = model(
                 prompt,
-                max_length=150,
+                max_new_tokens=150,
                 do_sample=True,
                 temperature=0.7,
                 top_p=0.95,
                 top_k=50,
                 num_return_sequences=1
-            )[0]["generated_text"]
-            
-            answer = response.split("A:")[-1].strip()
+            )
 
-            if not answer:
+            full_output = response[0]["generated_text"]
+            answer = full_output[len(prompt):].strip()
+
+            if not answer or len(answer) < 5:
                 st.error("Hmm... couldn't generate a helpful response. Try rephrasing your question.")
             else:
                 st.success("Answer:")
