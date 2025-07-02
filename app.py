@@ -2,10 +2,10 @@ import streamlit as st
 import torch
 from transformers import pipeline
 
-# Dynamically assign device
+# Detect if GPU is available
 device = 0 if torch.cuda.is_available() else -1
 
-# Load model once using cache
+# Cache the model loading to avoid reloading on each interaction
 @st.cache_resource
 def load_model():
     return pipeline(
@@ -16,8 +16,7 @@ def load_model():
 
 model = load_model()
 
-# Streamlit UI
-st.title("🤖 DAA & OS GPT - Free Tutor")
+st.title("🤖 JAVA")
 st.subheader("Ask anything about Design and Analysis of Algorithms or Operating Systems.")
 
 user_input = st.text_area("💬 Ask a question:", height=100)
@@ -40,7 +39,6 @@ if st.button("Get Answer"):
                 top_k=50,
                 num_return_sequences=1
             )
-
             full_output = response[0]["generated_text"]
             answer = full_output[len(prompt):].strip()
 
