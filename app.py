@@ -482,7 +482,7 @@
               "  cancel.textContent = 'Cancel upload';\n",
               "  const cancelPromise = new Promise((resolve) => {\n",
               "    cancel.onclick = () => {\n",
-              "      resolve(null);\n",
+              "      resolve(None);\n",
               "    };\n",
               "  });\n",
               "\n",
@@ -1432,7 +1432,7 @@
       "metadata": {
         "id": "G-mhET1Up_3o"
       },
-      "execution_count": null,
+      "execution_count": None,
       "outputs": []
     },
     {
