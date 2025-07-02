@@ -352,7 +352,7 @@
             "_model_module": "@jupyter-widgets/controls",
             "_model_module_version": "1.5.0",
             "_model_name": "DescriptionStyleModel",
-            "_view_count": null,
+            "_view_count": None,
             "_view_module": "@jupyter-widgets/base",
             "_view_module_version": "1.2.0",
             "_view_name": "StyleView",
