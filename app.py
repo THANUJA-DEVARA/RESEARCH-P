@@ -1,6 +1,7 @@
 import streamlit as st
 import torch
 from transformers import pipeline
+print(pipeline)
 
 # Detect if GPU is available
 device = 0 if torch.cuda.is_available() else -1
