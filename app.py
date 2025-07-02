@@ -1,7 +1,6 @@
 import streamlit as st
 import torch
---force-reinstall transformers==4.40.0
-
+from transformers import pipeline  # ✅ Required import
 
 # Detect if GPU is available
 device = 0 if torch.cuda.is_available() else -1
