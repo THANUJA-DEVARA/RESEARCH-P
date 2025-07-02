@@ -1,6 +1,6 @@
 import streamlit as st
 import torch
-from transformers import pipeline  # ✅ Required import
+from transformers import pipeline
 
 # Detect if GPU is available
 device = 0 if torch.cuda.is_available() else -1
@@ -11,39 +11,50 @@ def load_model():
     return pipeline(
         "text-generation",
         model="EleutherAI/gpt-neo-1.3B",
-        device=device,
+        device=device
     )
 
+# Load the model
 model = load_model()
 
+# UI elements
 st.title("🤖 JAVA")
 st.subheader("Ask anything about Design and Analysis of Algorithms or Operating Systems.")
 
+# Input box
 user_input = st.text_area("💬 Ask a question:", height=100)
 
+# Button click logic
 if st.button("Get Answer"):
     if not user_input.strip():
         st.warning("Please enter a question.")
     else:
+        # Construct prompt
         prompt = (
             "You are an expert tutor for B.Tech students in Design and Analysis of Algorithms and Operating Systems.\n"
             f"Q: {user_input}\nA:"
         )
-        with st.spinner("Thinking..."):
-            response = model(
-                prompt,
-                max_new_tokens=150,
-                do_sample=True,
-                temperature=0.7,
-                top_p=0.95,
-                top_k=50,
-                num_return_sequences=1
-            )
-            full_output = response[0]["generated_text"]
-            answer = full_output[len(prompt):].strip()
 
-            if not answer or len(answer) < 5:
-                st.error("Hmm... couldn't generate a helpful response. Try rephrasing your question.")
-            else:
-                st.success("Answer:")
-                st.write(answer)
+        with st.spinner("Thinking..."):
+            try:
+                # Generate answer
+                response = model(
+                    prompt,
+                    max_new_tokens=150,
+                    do_sample=True,
+                    temperature=0.7,
+                    top_p=0.95,
+                    top_k=50,
+                    num_return_sequences=1
+                )
+                full_output = response[0]["generated_text"]
+                answer = full_output[len(prompt):].strip()
+
+                if not answer or len(answer) < 5:
+                    st.error("Hmm... couldn't generate a helpful response. Try rephrasing your question.")
+                else:
+                    st.success("Answer:")
+                    st.write(answer)
+
+            except Exception as e:
+                st.error(f"Error generating response: {str(e)}")
